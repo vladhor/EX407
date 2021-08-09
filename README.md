@@ -6,17 +6,17 @@ Note: you have root access to all five servers.
 
 ## Task 1: Ansible Installation and Configuration
 Install ansible package on the control node (including any dependencies) and configure the following:
++Create a regular user **automation** with the password of **devops**. Use this user for all sample exam tasks, unless you are working on the task #2 that requires creating the **automation** user on inventory hosts. You have root access to all five servers.
++All playbooks and other Ansible configuration that you create for this sample exam should be stored in `/home/automation/plays`.
 
-Create a regular user automation with the password of devops. Use this user for all sample exam tasks.
-All playbooks and other Ansible configuration that you create for this sample exam should be stored in /home/automation/plays.
-Create a configuration file /home/automation/plays/ansible.cfg to meet the following requirements:
+Create a configuration file `/home/automation/plays/ansible.cfg` to meet the following requirements:
++The roles path should include `/home/automation/plays/roles`, as well as any other path that may be required for the course of the sample exam.
++The inventory file path is `/home/automation/plays/inventory`.
++Privilege escallation is disabled by default.
++Ansible should be able to manage 10 hosts at a single time.
++Ansible should connect to all managed nodes using the automation user.
 
-The roles path should include /home/automation/plays/roles, as well as any other path that may be required for the course of the sample exam.
-The inventory file path is /home/automation/plays/inventory.
-Privilege escallation is disabled by default.
-Ansible should be able to manage 10 hosts at a single time.
-Ansible should connect to all managed nodes using the automation user.
-Create an inventory file /home/automation/plays/inventory with the following:
+Create an inventory file `/home/automation/plays/inventory` with the following:
 ```
 ansible2.hl.local is a member of the proxy host group.
 ansible3.hl.local is a member of the webservers host group.
@@ -26,26 +26,27 @@ ansible5.hl.local is a member of the database host group.
 ## Task 2: Ad-Hoc Commands
 Generate an SSH keypair on the control node. You can perform this step manually.
 
-Write a script /home/automation/plays/adhoc that uses Ansible ad-hoc commands to achieve the following:
+Write a script `/home/automation/plays/adhoc` that uses Ansible ad-hoc commands to achieve the following:
++User automation is created on all inventory hosts.
++SSH key (that you generated) is copied to all inventory hosts for the **automation** user and stored in `/home/automation/.ssh/authorized_keys`.
++The **automation** user is allowed to elevate privileges on all inventory hosts without having to provide a password.
 
-User automation is created on all inventory hosts.
-SSH key (that you generated) is copied to all inventory hosts for the automation user and stored in /home/automation/.ssh/authorized_keys.
-The automation user is allowed to elevate privileges on all inventory hosts without having to provide a password.
 After running the adhoc script, you should be able to SSH into all inventory hosts using the automation user without password, as well as a run all privileged commands.
 
 ## Task 3: File Content
-Create a playbook /home/automation/plays/motd.yml that runs on all inventory hosts and does the following:
+Create a playbook `/home/automation/plays/motd.yml` that runs on all inventory hosts and does the following:
 
-The playbook should replace any existing content of /etc/motd with text. Text depends on the host group.
-On hosts in the proxy host group the line should be “Welcome to HAProxy server”.
-On hosts in the webserver host group the line should be “Welcome to Apache server”.
-On hosts in the database host group the line should be “Welcome to MySQL server”.
-Task 4: Configure SSH Server
-Create a playbook /home/automation/plays/sshd.yml that runs on all inventory hosts and configures SSHD daemon as follows:
++The playbook should replace any existing content of `/etc/motd` with text. Text depends on the host group.
++On hosts in the proxy host group the line should be `“Welcome to HAProxy server”`.
++On hosts in the webserver host group the line should be `“Welcome to Apache server”`.
++On hosts in the database host group the line should be `“Welcome to MySQL server”`.
 
-banner is set to /etc/motd
-X11Forwarding is disabled
-MaxAuthTries is set to 3
+## Task 4: Configure SSH Server
+Create a playbook `/home/automation/plays/sshd.yml` that runs on all inventory hosts and configures SSHD daemon as follows:
+
++banner is set to `/etc/motd`
++`X11Forwarding` is disabled
++`MaxAuthTries` is set to 3
 
 ## Task 5: Ansible Vault
 Create Ansible vault file /home/automation/plays/secret.yml. Encryption/decryption password is devops.
