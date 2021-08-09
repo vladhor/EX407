@@ -10,11 +10,11 @@ Install ansible package on the control node (including any dependencies) and con
 + All playbooks and other Ansible configuration that you create for this sample exam should be stored in `/home/automation/plays`.
 
 Create a configuration file `/home/automation/plays/ansible.cfg` to meet the following requirements:
--The roles path should include `/home/automation/plays/roles`, as well as any other path that may be required for the course of the sample exam.
--The inventory file path is `/home/automation/plays/inventory`.
--Privilege escallation is disabled by default.
--Ansible should be able to manage 10 hosts at a single time.
--Ansible should connect to all managed nodes using the automation user.
++ The roles path should include `/home/automation/plays/roles`, as well as any other path that may be required for the course of the sample exam.
++ The inventory file path is `/home/automation/plays/inventory`.
++ Privilege escallation is disabled by default.
++ Ansible should be able to manage 10 hosts at a single time.
++ Ansible should connect to all managed nodes using the automation user.
 
 Create an inventory file `/home/automation/plays/inventory` with the following:
 ```
@@ -27,40 +27,40 @@ ansible5.hl.local is a member of the database host group.
 Generate an SSH keypair on the control node. You can perform this step manually.
 
 Write a script `/home/automation/plays/adhoc` that uses Ansible ad-hoc commands to achieve the following:
-+User automation is created on all inventory hosts.
-+SSH key (that you generated) is copied to all inventory hosts for the **automation** user and stored in `/home/automation/.ssh/authorized_keys`.
-+The **automation** user is allowed to elevate privileges on all inventory hosts without having to provide a password.
++ User automation is created on all inventory hosts.
++ SSH key (that you generated) is copied to all inventory hosts for the **automation** user and stored in `/home/automation/.ssh/authorized_keys`.
++ The **automation** user is allowed to elevate privileges on all inventory hosts without having to provide a password.
 
 After running the adhoc script, you should be able to SSH into all inventory hosts using the automation user without password, as well as a run all privileged commands.
 
 ## Task 3: File Content
 Create a playbook `/home/automation/plays/motd.yml` that runs on all inventory hosts and does the following:
 
-+The playbook should replace any existing content of `/etc/motd` with text. Text depends on the host group.
-+On hosts in the proxy host group the line should be `“Welcome to HAProxy server”`.
-+On hosts in the webserver host group the line should be `“Welcome to Apache server”`.
-+On hosts in the database host group the line should be `“Welcome to MySQL server”`.
++ The playbook should replace any existing content of `/etc/motd` with text. Text depends on the host group.
++ On hosts in the proxy host group the line should be `“Welcome to HAProxy server”`.
++ On hosts in the webserver host group the line should be `“Welcome to Apache server”`.
++ On hosts in the database host group the line should be `“Welcome to MySQL server”`.
 
 ## Task 4: Configure SSH Server
 Create a playbook `/home/automation/plays/sshd.yml` that runs on all inventory hosts and configures SSHD daemon as follows:
 
-+banner is set to `/etc/motd`
-+`X11Forwarding` is disabled
-+`MaxAuthTries` is set to 3
++ `banner is set to `/etc/motd`
++ `X11Forwarding` is disabled
++ `MaxAuthTries` is set to 3
 
 ## Task 5: Ansible Vault
-Create Ansible vault file /home/automation/plays/secret.yml. Encryption/decryption password is devops.
+Create Ansible vault file `/home/automation/plays/secret.yml`. Encryption/decryption password is **devops**.
 
 Add the following variables to the vault:
++ **user_password** with value of **devops**
++ **database_password** with value of **devops**
 
-user_password with value of devops
-database_password with value of devops
-Store Ansible vault password in the file /home/automation/plays/vault_key.
+Store Ansible vault password in the file `/home/automation/plays/vault_key`.
 
 ## Task 6: Users and Groups
 You have been provided with the list of users below.
 
-Use /home/automation/plays/vars/user_list.yml file to save this content.
+Use `/home/automation/plays/vars/user_list.yml` file to save this content.
 ```
 ---
 users:
@@ -73,32 +73,30 @@ users:
   - username: patrick
     uid: 2202
 ```
-Create a playbook /home/automation/plays/users.yml that uses the vault file /home/automation/plays/secret.yml to achieve the following:
-
-Users whose user ID starts with 1 should be created on servers in the webservers host group. User password should be used from the user_password variable.
-Users whose user ID starts with 2 should be created on servers in the database host group. User password should be used from the user_password variable.
-All users should be members of a supplementary group wheel.
-Shell should be set to /bin/bash for all users.
-Account passwords should use the SHA512 hash format.
-Each user should have an SSH key uploaded (use the SSH key that you create previously).
+Create a playbook `/home/automation/plays/users.yml` that uses the vault file `/home/automation/plays/secret.yml` to achieve the following:
++ Users whose user ID starts with 1 should be created on servers in the **webservers** host group. User password should be used from the **user_password** variable.
++ Users whose user ID starts with 2 should be created on servers in the **database** host group. User password should be used from the **user_password** variable.
++ All users should be members of a supplementary group **wheel**.
++ Shell should be set to `/bin/bash` for all users.
++ Account passwords should use the SHA512 hash format.
++ Each user should have an SSH key uploaded (use the SSH key that you create previously).
 After running the playbook, users should be able to SSH into their respective servers without passwords.
 
 ## Task 7: Scheduled Tasks
-Create a playbook /home/automation/plays/regular_tasks.yml that runs on servers in the proxy host group and does the following:
-
-A root crontab record is created that runs every hour.
-The cron job appends the file /var/log/time.log with the output from the date command.
+Create a playbook `/home/automation/plays/regular_tasks.yml` that runs on servers in the **proxy** host group and does the following:
++ A root crontab record is created that runs every hour.
++ The cron job appends the file `/var/log/time.log` with the output from the date command.
 
 ## Task 8: Software Repositories
 Create a playbook /home/automation/plays/repository.yml that runs on servers in the database host group and does the following:
 
-A YUM repository file is created.
-The name of the repository is mysql56-community.
-The description of the repository is “MySQL 5.6 YUM Repo”.
-Repository baseurl is http://repo.mysql.com/yum/mysql-5.6-community/el/7/x86_64/.
-Repository GPG key is at http://repo.mysql.com/RPM-GPG-KEY-mysql.
-Repository GPG check is enabled.
-Repository is enabled.
++ A YUM repository file is created.
++ The name of the repository is **mysql56-community**.
++ The description of the repository is “MySQL 5.6 YUM Repo”.
++ Repository baseurl is `http://repo.mysql.com/yum/mysql-5.6-community/el/7/x86_64/`.
++ Repository GPG key is at `http://repo.mysql.com/RPM-GPG-KEY-mysql`.
++ Repository GPG check is enabled.
++ Repository is enabled.
 
 ## Task 9: Create and Work with Roles
 Create a role called sample-mysql and store it in /home/automation/plays/roles. The role should satisfy the following requirements:
