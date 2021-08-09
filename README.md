@@ -99,18 +99,18 @@ Create a playbook /home/automation/plays/repository.yml that runs on servers in 
 + Repository is enabled.
 
 ## Task 9: Create and Work with Roles
-Create a role called sample-mysql and store it in /home/automation/plays/roles. The role should satisfy the following requirements:
+Create a role called **sample-mysql** and store it in `/home/automation/plays/roles`. The role should satisfy the following requirements:
 
-A primary partition number 1 of size 800MB on device /dev/sdb is created.
-An LVM volume group called vg_database is created that uses the primary partition created above.
-An LVM logical volume called lv_mysql is created of size 512MB in the volume group vg_database.
-An XFS filesystem on the logical volume lv_mysql is created.
-Logical volume lv_mysql is permanently mounted on /mnt/mysql_backups.
-mysql-community-server package is installed.
-Firewall is configured to allow all incoming traffic on MySQL port TCP 3306.
-MySQL root user password should be set from the variable database_password (see task #5).
-MySQL server should be started and enabled on boot.
-MySQL server configuration file is generated from the my.cnf.j2 Jinja2 template with the following content:
++ A primary partition number 1 of size 800MB on device `/dev/sdb` is created.
++ An LVM volume group called `vg_database` is created that uses the primary partition created above.
++ An LVM logical volume called `lv_mysql` is created of size 512MB in the volume group `vg_database`.
++ An XFS filesystem on the logical volume `lv_mysql` is created.
++ Logical volume `lv_mysql` is permanently mounted on `/mnt/mysql_backups`.
++ **mysql-community-server** package is installed.
++ Firewall is configured to allow all incoming traffic on MySQL port TCP 3306.
++ MySQL root user password should be set from the variable **database_password** (see task #5).
++ MySQL server should be started and enabled on boot.
++ MySQL server configuration file is generated from the my.cnf.j2 Jinja2 template with the following content:
 ```
 [mysqld]
 bind_address = {{ ansible_default_ipv4.address }}
@@ -125,75 +125,72 @@ sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 log-error=/var/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid
 ```
-Create a playbook /home/automation/plays/mysql.yml that uses the role and runs on hosts in the database host group.
+Create a playbook `/home/automation/plays/mysql.yml` that uses the role and runs on hosts in the **database** host group.
 
 ## Task 10: Create and Work with Roles (Some More)
-Create a role called sample-apache and store it in /home/automation/plays/roles. The role should satisfy the following requirements:
-
-The httpd, mod_ssl and php packages are installed. Apache service is running and enabled on boot.
-Firewall is configured to allow all incoming traffic on HTTP port TCP 80 and HTTPS port TCP 443.
-Apache service should be restarted every time the file /var/www/html/index.html is modified.
-A Jinja2 template file index.html.j2 is used to create the file /var/www/html/index.html with the following content:
+Create a role called **sample-apache** and store it in `/home/automation/plays/roles`. The role should satisfy the following requirements:
++ The **httpd, mod_ssl** and **php** packages are installed. Apache service is running and enabled on boot.
++ Firewall is configured to allow all incoming traffic on HTTP port TCP 80 and HTTPS port TCP 443.
++ Apache service should be restarted every time the file `/var/www/html/index.html` is modified.
++ A Jinja2 template file index.html.j2 is used to create the file `/var/www/html/index.html` with the following content:
+```
 The address of the server is: IPV4ADDRESS
+```
 IPV4ADDRESS is the IP address of the managed node.
 
-Create a playbook /home/automation/plays/apache.yml that uses the role and runs on hosts in the webservers host group.
+Create a playbook `/home/automation/plays/apache.yml` that uses the role and runs on hosts in the **webservers** host group.
 
 ## Task 11: Download Roles From an Ansible Galaxy and Use Them
-Use Ansible Galaxy to download and install geerlingguy.haproxy role in /home/automation/plays/roles.
+Use Ansible Galaxy to download and install geerlingguy.haproxy role in `/home/automation/plays/roles`.
 
-Create a playbook /home/automation/plays/haproxy.yml that runs on servers in the proxy host group and does the following:
-
-Use geerlingguy.haproxy role to load balance request between hosts in the webservers host group.
-Use roundrobin load balancing method.
-HAProxy backend servers should be configured for HTTP only (port 80).
-Firewall is configured to allow all incoming traffic on port TCP 80.
-If your playbook works, then doing “curl http://ansible2.hl.local/” should return output from the web server (see task #10). Running the command again should return output from the other web server.
+Create a playbook `/home/automation/plays/haproxy.yml` that runs on servers in the **proxy** host group and does the following:
++ Use **geerlingguy.haproxy** role to load balance request between hosts in the **webservers** host group.
++ Use **roundrobin** load balancing method.
++ **HAProxy** backend servers should be configured for HTTP only (port 80).
++ Firewall is configured to allow all incoming traffic on port TCP 80.
+If your playbook works, then doing **curl http://ansible2.hl.local/** should return output from the web server (see task #10). Running the command again should return output from the other web server.
 
 ## Task 12: Security
-Create a playbook /home/automation/plays/selinux.yml that runs on hosts in the webservers host group and does the following:
+Create a playbook `/home/automation/plays/selinux.yml` that runs on hosts in the **webservers** host group and does the following:
 
-Uses the selinux RHEL system role.
-Enables httpd_can_network_connect SELinux boolean.
-The change must survive system reboot.
-Task 13: Use Conditionals to Control Play Execution
-Create a playbook /home/automation/plays/sysctl.yml that runs on all inventory hosts and does the following:
++ Uses the selinux **RHEL system role**.
++ Enables **httpd_can_network_connect** SELinux boolean.
++ The change must survive system reboot.
 
-If a server has more than 2048MB of RAM, then parameter vm.swappiness is set to 10.
-If a server has less than 2048MB of RAM, then the following error message is displayed:
-Server memory less than 2048MB
+## Task 13: Use Conditionals to Control Play Execution
+Create a playbook `/home/automation/plays/sysctl.yml` that runs on all inventory hosts and does the following:
+
++ If a server has more than 2048MB of RAM, then parameter **vm.swappiness** is set to 10.
++ If a server has less than 2048MB of RAM, then the following error message is displayed:
+`Server memory less than 2048MB`
 
 ## Task 14: Use Archiving
-Create a playbook /home/automation/plays/archive.yml that runs on hosts in the database host group and does the following:
-
-A file /mnt/mysql_backups/database_list.txt is created that contains the following line: dev,test,qa,prod.
-A gzip archive of the file /mnt/mysql_backups/database_list.txt is created and stored in /mnt/mysql_backups/archive.gz.
+Create a playbook `/home/automation/plays/archive.yml` that runs on hosts in the **database** host group and does the following:
++ A file `/mnt/mysql_backups/database_list.txt` is created that contains the following line: dev,test,qa,prod.
++ A gzip archive of the file `/mnt/mysql_backups/database_list.txt` is created and stored in `/mnt/mysql_backups/archive.gz`.
 
 ## Task 15: Work with Ansible Facts
-Create a playbook /home/automation/plays/facts.yml that runs on hosts in the database host group and does the following:
-
-A custom Ansible fact server_role=mysql is created that can be retrieved from ansible_local.custom.sample_exam when using Ansible setup module.
+Create a playbook `/home/automation/plays/facts.yml` that runs on hosts in the **database** host group and does the following:
++ A custom Ansible fact **server_role=mysql** is created that can be retrieved from **ansible_local.custom.sample_exam** when using Ansible setup module.
 
 ## Task 16: Software Packages
-Create a playbook /home/automation/plays/packages.yml that runs on all inventory hosts and does the following:
-
-Installs tcpdump and mailx packages on hosts in the proxy host groups.
-Installs lsof and mailx and packages on hosts in the database host groups.
+Create a playbook `/home/automation/plays/packages.yml` that runs on all inventory hosts and does the following:
++ Installs **tcpdump** and **mailx** packages on hosts in the **proxy** host groups.
++ Installs **lsof** and **mailx** and packages on hosts in the **database** host groups.
 
 ## Task 17: Services
-Create a playbook /home/automation/plays/target.yml that runs on hosts in the webserver host group and does the following:
-
-Sets the default boot target to multi-user.
+Create a playbook `/home/automation/plays/target.yml` that runs on hosts in the **webserver** host group and does the following:
++ Sets the default boot target to **multi-user**.
 
 ## Task 18. Create and Use Templates to Create Customised Configuration Files
-Create a playbook /home/automation/plays/server_list.yml that does the following:
+Create a playbook `/home/automation/plays/server_list.yml` that does the following:
 
-Playbook uses a Jinja2 template server_list.j2 to create a file /etc/server_list.txt on hosts in the database host group.
-The file /etc/server_list.txt is owned by the automation user.
-File permissions are set to 0600.
-SELinux file label should be set to net_conf_t.
-The content of the file is a list of FQDNs of all inventory hosts.
-After running the playbook, the content of the file /etc/server_list.txt should be the following:
++ Playbook uses a Jinja2 template `server_list.j2` to create a file `/etc/server_list.txt` on hosts in the **database** host group.
++ The file `/etc/server_list.txt` is owned by the **automation** user.
++ File permissions are set to **0600**.
++ SELinux file label should be set to **net_conf_t**.
++ The content of the file is a list of FQDNs of all inventory hosts.
++ After running the playbook, the content of the file `/etc/server_list.txt` should be the following:
 ```
 ansible2.hl.local
 ansible3.hl.local
